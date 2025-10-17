@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net35</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	  <LangVersion>10.0</LangVersion>
+	  <ImplicitUsings>disable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>D:\crash bandicoot  n sane trilogy SETAM\steamapps\common\The Escapists 2\TheEscapists2_Data\Managed\Assembly-CSharp — kopia.dll</HintPath>
+		<Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>D:\crash bandicoot  n sane trilogy SETAM\steamapps\common\The Escapists 2\TheEscapists2_Data\Managed\UnityEngine.dll</HintPath>
+		<Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+</Project>
