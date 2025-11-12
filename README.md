@@ -17,6 +17,9 @@ Projekt tłumaczy na Język Polski 98% gry, wszystkie menusy, interfejsy, zadani
 
 ## 💾 Instalacja
 
+Dostępny poradnik wideo:
+https://www.youtube.com/watch?v=pr5_-HFvEDs
+
 1. Pobierz najnowszą wersję z sekcji **[Releases](../../releases)**.  
 2. Uruchom plik `TE2AssemblyPatcher.exe`.  
 3. Wskaż folder z grą (jeśli nie wykryje automatycznie).  
@@ -60,5 +63,5 @@ Projekt tłumaczy na Język Polski 98% gry, wszystkie menusy, interfejsy, zadani
 ## Znane problemy
 
 - Jakość tłumaczeń
-- Brak tłumaczeń losowych tekstów postaci
-- Potencjalne problemy z pełnym poprawnym załadowaniem wszystkich tekstów do pamięci gry
+- Niespójność w tłumaczeniach
+- Brakujące tłumaczenia
