@@ -25,17 +25,25 @@ namespace TE2PolishLocalizationNamespace
                 .Replace("\\\\", "\\");
         }
 
-        private void TryToPatch()
+        private int TryToPatch()
         {
             try
             {
-                Debug.Log("Langpack zawiera: " + Content.Data.Count);
+                Debug.Log("[PL] Langpack zawiera: " + Content.Data.Count);
                 Type locType = typeof(Localization);
                 FieldInfo fTable = locType.GetField("m_StringTable",
                     BindingFlags.NonPublic | BindingFlags.Static);
                 var dict = (Dictionary<string, string[]>)fTable.GetValue(null);
 
-                Debug.Log($"[PL] Odnaleziono m_StringTable: {dict.Count} wpisów");
+                if (dict.Count > 1)
+                {
+                    Debug.Log($"[PL] Odnaleziono m_StringTable: {dict.Count} wpisów");
+                }
+                else
+                {
+                    Debug.LogWarning("$[PL] m_StringTable jest pusty)");
+                    return -1;
+                }
 
                 foreach (var kvp in dict)
                 {
@@ -47,18 +55,19 @@ namespace TE2PolishLocalizationNamespace
                         }
                         catch (Exception e)
                         {
-                            Debug.LogError("Problem z nadpisaniem wartości");
+                            Debug.LogError("[PL] Problem z nadpisaniem wartości");
                         }
                     }
                     else
                     {
-                        Debug.LogWarning("Gra nie zawiera klucza:" + kvp.Key.ToString());
+                        Debug.LogWarning("[PL] Gra nie zawiera klucza:" + kvp.Key.ToString());
                     }
                 }
             }
             catch (Exception e)
             {
                 Debug.LogError("[PL] Błąd podczas dostępu do lokalizacji: " + e.ToString());
+                return -2;
             }
 
             try
@@ -115,22 +124,57 @@ namespace TE2PolishLocalizationNamespace
             catch (Exception ex)
             {
                 Debug.LogError($"[PL] Błąd podczas ładowania wariantów: {ex}");
+                return -3;
             }
+
+            return 1;
         }
 
         private void Start()
         {
-            TryToPatch();
+            patchingResult = TryToPatch();
+
+            if (patchingResult == 1)
+            {
+                Debug.Log($"[PL] Poprawnie załadowano spolszczenie");
+            }
+            else
+            {
+                Debug.LogWarning($"[PL] Nie udało się załadować spolszczenia. Ponowna próba");
+                StartCoroutine(WaitForLocalization());
+            }
         }
+
+        IEnumerator WaitForLocalization()
+        {
+            Type locType = typeof(Localization);
+            FieldInfo fTable = locType.GetField("m_StringTable", BindingFlags.NonPublic | BindingFlags.Static);
+            var dict = (Dictionary<string, string[]>)fTable.GetValue(null);
+
+            while (dict == null || dict.Count == 0)
+                yield return null;
+
+            if (!applied)
+            {
+                applied = true;
+                patchingResult = TryToPatch();
+            }
+        }
+
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.T))
             {
+                Debug.Log("[PL] Wymuszono załadowanie spolszczenia");
                 TryToPatch();
             }
         }
 
         private Dictionary<string, string> texts = new Dictionary<string, string>();
+
+        private bool applied = false;
+
+        public static int patchingResult = 0;
     }
 
     public class CustomLocalization
@@ -141,16 +185,16 @@ namespace TE2PolishLocalizationNamespace
             CustomLocalization.consoleObject.AddComponent<DebugConsole>();
             UnityEngine.Object.DontDestroyOnLoad(CustomLocalization.consoleObject);
 
-            Debug.Log("Debug console loaded");
+            Debug.Log("[PL] Konsola załadowana");
 
             CustomLocalization.localizatorObject = new GameObject("Localizator");
             CustomLocalization.localizatorObject.AddComponent<Localize>();
             UnityEngine.Object.DontDestroyOnLoad(CustomLocalization.localizatorObject);
 
-            Debug.Log("Localization " + VERSION.ToString() + " loaded");
+            Debug.Log("[PL] Spolszczenie v" + VERSION.ToString() + " załadowane");
         }
 
-        public static string VERSION = "1.1";
+        public static string VERSION = "1.2";
 
         private static GameObject consoleObject;
         private static GameObject localizatorObject;
